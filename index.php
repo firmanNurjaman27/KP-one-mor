@@ -17,7 +17,7 @@ $exploreProgress = getExploreProgress($player_id);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>MCEAT Learning - Petualangan Halal & Haram</title>
+    <title>MCEAT Learning- Petualangan Halal & Haram</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -231,6 +231,22 @@ $exploreProgress = getExploreProgress($player_id);
             .mission-grid { grid-template-columns: 1fr 1fr; }
             .player-info, .xp-counter { display: none; }
         }
+
+                /* Mengatur pembungkus logo agar memiliki batas ukuran yang ideal */
+        .logo-3d {
+            display: flex;
+            align-items: center;
+            gap: 10px; /* Jarak antara logo dan teks */
+            max-height: 50px; /* Batasi tinggi maksimal pembungkus di navbar */
+        }
+
+        /* Mengatur gambar logo agar responsif */
+        .logo-3d img {
+            height: 100%;       /* Mengikuti tinggi pembungkusnya */
+            width: auto;        /* Lebar otomatis menyesuaikan proporsi gambar agar tidak gepeng */
+            max-height: 40px;   /* Atur ukuran tinggi maksimal logo yang Anda inginkan */
+            object-fit: contain;/* Memastikan gambar termuat sempurna tanpa terpotong */
+        }
     </style>
 </head>
 <body>
@@ -245,8 +261,8 @@ $exploreProgress = getExploreProgress($player_id);
         <header class="glass-header">
             <div class="header-left">
                 <div class="logo-3d">
-                    <span class="logo-emoji">☪️</span>
-                    <span class="logo-text">MCEAT <span class="highlight">Learning</span></span>
+                   <img src="asset/img/logo.png" alt="Logo SDN Cibanjaran">
+                    <span class="logo-text">SDN <span class="highlight">Cibanjaran</span></span>
                 </div>
                 <div class="mceat-badge">🎓 Halal & Haram</div>
                 <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin']): ?>
