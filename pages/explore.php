@@ -7,21 +7,30 @@
     <div class="explore-game-container">
         <div class="explore-board">
             <?php 
-            // Memastikan data $exploreProgress valid berupa array dan tidak kosong
-            if (is_array($exploreProgress) && !empty($exploreProgress)): 
-                foreach($exploreProgress as $item): 
-                    // Mengamankan data dengan operator ?? agar tidak memicu error jika ada kolom kosong
-                    $namaItem  = $item['nama_item'] ?? 'Tanpa Nama';
-                    $deskripsi = $item['deskripsi'] ?? 'Tidak ada deskripsi.';
-                    $hukum     = $item['hukum'] ?? 'Belum Diketahui';
-                    $emoji     = $item['emoji'] ?? '❓';
-                    $isTerbuka = isset($item['status_buka']) && $item['status_buka'];
+            // 1. Amankan data dari global index
+            $safeExplore = is_array($exploreProgress) ? $exploreProgress : [];
+
+            if (!empty($safeExplore)): 
+                /** * Memberitahu VS Code secara paksa bahwa $item adalah array 
+                 * @var array $item 
+                 */
+                foreach($safeExplore as $item): 
+                    // 2. Lakukan pengecekan tipe data sebelum mengakses indeks array
+                    if (is_array($item)) {
+                        $namaItem  = isset($item['nama_item']) ? $item['nama_item'] : 'Tanpa Nama';
+                        $deskripsi = isset($item['deskripsi']) ? $item['deskripsi'] : 'Tidak ada deskripsi.';
+                        $hukum     = isset($item['hukum']) ? $item['hukum'] : 'Belum Diketahui';
+                        $emoji     = isset($item['emoji']) ? $item['emoji'] : '❓';
+                        $isTerbuka = isset($item['status_buka']) && $item['status_buka'] ? true : false;
+                    } else {
+                        // Antisipasi jika isi elemen di dalam array rusak/bukan array
+                        continue;
+                    }
             ?>
-                <!-- Kartu Item Eksplorasi -->
                 <div class="explore-card <?php echo $isTerbuka ? 'completed' : ''; ?>" 
                      onclick="showExploreDetail('<?php echo addslashes($namaItem); ?>', '<?php echo addslashes($deskripsi); ?>', '<?php echo addslashes($hukum); ?>', '<?php echo addslashes($emoji); ?>')">
                     
-                    <span class="card-emoji"><?php echo $emoji; ?></span>
+                    <span class="card-emoji"><?php echo htmlspecialchars($emoji); ?></span>
                     <span><?php echo htmlspecialchars($namaItem); ?></span>
                     <span class="card-label"><?php echo htmlspecialchars($hukum); ?></span>
                     
@@ -33,15 +42,13 @@
                 endforeach; 
             else: 
             ?>
-                <!-- Tampilan Cadangan jika Data di Database Kosong atau Gagal Diambil -->
                 <div style="grid-column: span 2; text-align: center; padding: 40px 20px; color: var(--text-soft);">
                     <i class="fas fa-folder-open" style="font-size: 40px; margin-bottom: 12px; display: block; opacity: 0.5;"></i>
-                    <p>Ups, data eksplorasi tidak ditemukan atau gagal dimuat dari database.</p>
+                    <p>Ups, data eksplorasi tidak ditemukan atau gagal dimuat.</p>
                 </div>
             <?php endif; ?>
         </div>
         
-        <!-- Panel Informasi Samping (Detail Deskripsi Hukum) -->
         <div class="explore-info-panel" id="explorePanelDefault">
             <div class="big-emoji">🧭</div>
             <h3>Pilih Item</h3>
